@@ -29,43 +29,48 @@ Call this script as such:
 After calling the script, a Synb0 file will be generated in the given Dmprspace.
 '''
 
+
 def synb0(Dmprspace, mpr, name, root):
-   #input:
-   #   Dmprspace: directory where intermediate output will be stored
-   #   mpr: T1 file
-   #   name: output file name (subject name typical)
-   #   dataset: output directory of RGB conversion
+    # input:
+    #   Dmprspace: directory where intermediate output will be stored
+    #   mpr: T1 file
+    #   name: output file name (subject name typical)
+    #   dataset: output directory of RGB conversion
 
-   #output:
-   #   out_synb0: path of resulting synb0
+    # output:
+    #   out_synb0: path of resulting synb0
 
-	Dresults = os.path.join(Dmprspace,'synb0_results')
-	dataset = os.path.join(Dmprspace, 'synb0_dataset')
+    Dresults = os.path.join(Dmprspace, 'synb0_results')
+    dataset = os.path.join(Dmprspace, 'synb0_dataset')
 
-	# Build paths to specific scripts depending on the given root repo
-	synb0_path = os.path.join(root, 'src')
-	pix2pix_path = os.path.join(synb0_path, 'python/pytorch-CycleGAN-and-pix2pix')
-	checkpoints_dir = os.path.join(synb0_path, "checkpoints")
-	pix2pix_test_path = os.path.join(pix2pix_path, "test.py")
+    # Build paths to specific scripts depending on the given root repo
+    synb0_path = os.path.join(root, 'src')
+    pix2pix_path = os.path.join(synb0_path, 'python/pytorch-CycleGAN-and-pix2pix')
+    checkpoints_dir = os.path.join(synb0_path, "checkpoints")
+    pix2pix_test_path = os.path.join(pix2pix_path, "test.py")
 
-	# Call the matlab script that generates the images from the T1 for pix2pix to use
-	mat_command = "matlab -nodisplay -nodesktop -r \"addpath(genpath('"+synb0_path+"')); datRGBtriDWMRI('"+Dmprspace+"', '"+mpr+"', '"+name+"', '"+dataset+"', '"+root+"'); exit\""
-	os.system(mat_command)
+    # Call the matlab script that generates the images from the T1 for pix2pix to use
+    mat_command = "matlab -nodisplay -nodesktop -r \"addpath(genpath('"+synb0_path+"')); datRGBtriDWMRI('" + \
+        Dmprspace+"', '"+mpr+"', '"+name+"', '"+dataset+"', '"+root+"'); exit\""
+    os.system(mat_command)
 
-	# Prep the pix2pix commands for axi, sag, and cor
-	pix2pix_commands = ["python " + pix2pix_test_path + " --dataroot " + dataset + "-axi --name b0ganRGB-axi_pix2pix --model pix2pix  --results_dir " + Dresults + " --which_direction AtoB  --how_many  10000000 --dataset_mode aligned --checkpoints_dir " + checkpoints_dir + "",
-						"python " + pix2pix_test_path + " --dataroot " + dataset + "-sag --name b0ganRGB-sag_pix2pix --model pix2pix  --results_dir " + Dresults + " --which_direction AtoB  --how_many  10000000 --dataset_mode aligned --checkpoints_dir " + checkpoints_dir + "",
-						"python " + pix2pix_test_path + " --dataroot " + dataset + "-cor --name b0ganRGB-cor_pix2pix --model pix2pix  --results_dir " + Dresults + " --which_direction AtoB  --how_many  10000000 --dataset_mode aligned --checkpoints_dir " + checkpoints_dir + ""]
+    # Prep the pix2pix commands for axi, sag, and cor
+    pix2pix_commands = ["python " + pix2pix_test_path + " --dataroot " + dataset + "-axi --name b0ganRGB-axi_pix2pix --model pix2pix  --results_dir " + Dresults + " --which_direction AtoB  --how_many  10000000 --dataset_mode aligned --checkpoints_dir " + checkpoints_dir + "",
+                        "python " + pix2pix_test_path + " --dataroot " + dataset + "-sag --name b0ganRGB-sag_pix2pix --model pix2pix  --results_dir " + Dresults + " --which_direction AtoB  --how_many  10000000 --dataset_mode aligned --checkpoints_dir " + checkpoints_dir + "",
+                        "python " + pix2pix_test_path + " --dataroot " + dataset + "-cor --name b0ganRGB-cor_pix2pix --model pix2pix  --results_dir " + Dresults + " --which_direction AtoB  --how_many  10000000 --dataset_mode aligned --checkpoints_dir " + checkpoints_dir + ""]
 
-	# Call the pix2pix commands that uses training data to build the Synb0 output
-	for command in pix2pix_commands:
-		os.system(command)
+    # Call the pix2pix commands that uses training data to build the Synb0 output
+    for command in pix2pix_commands:
+        os.system(command)
 
-	# Call matlab that compiles the images back into a T1 format
-	mat_command = "matlab -nodisplay -nodesktop -r \"addpath(genpath('"+synb0_path+"')); datRGBtriDWMRIrecon('"+Dmprspace+"', '"+Dresults+"', '"+name+"', '"+dataset+"', '"+mpr+"', '"+root+"'); exit\""
-	os.system(mat_command)
+    # Call matlab that compiles the images back into a T1 format
+    mat_command = "matlab -nodisplay -nodesktop -r \"addpath(genpath('"+synb0_path+"')); datRGBtriDWMRIrecon('" + \
+        Dmprspace+"', '"+Dresults+"', '"+name+"', '" + \
+        dataset+"', '"+mpr+"', '"+root+"'); exit\""
+    os.system(mat_command)
 
-	# Copy the final output into  "sub-XX_synb0_output.nii.gz"
-	synb0_output = os.path.join(Dmprspace, name + "-r-mpr-ss-est-3--RGB-triplanar-mean-ORIG.nii.gz")
-	copyfile(synb0_output, os.path.join(Dmprspace, name + "_synb0_output.nii.gz"))
-	return synb0_output
+    # Copy the final output into  "sub-XX_synb0_output.nii.gz"
+    synb0_output = os.path.join(Dmprspace, name + "-r-mpr-ss-est-3--RGB-triplanar-mean-ORIG.nii.gz")
+    output_file = os.path.join(Dmprspace, name + "_synb0_output.nii.gz")
+    copyfile(synb0_output, output_file)
+    return output_file
