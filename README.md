@@ -25,9 +25,9 @@ mkdir -p Synb0-DISCO/src/checkpoints
 cp -r /projects/smansour/Synb0_DISCO_checkpoints/* Synb0-DISCO/src/checkpoints/
 ```
 
-Load FSL 5.0.10, cuda 7.5, matlab R2017b, MRtrix3 20180123, AFNI 2017.07.17.
+Load FSL 6.0.1, matlab R2017b.
 ```bash
-module load FSL/5.0.10 cuda/7.5 matlab/R2017b MRtrix3/20180123 AFNI/2017.07.17
+module load FSL/6.0.1 matlab/R2017b
 ```
 
 Create a python (3.5.5) environment with the dependencies from Synb0-DISCO/src/requirements.txt.
@@ -43,7 +43,14 @@ Congrats! You are now ready to generate synthetic b0s.
 
 ## Usage
 
+In the following commands, <synb0_root> should always point to the folder where you pulled the repo, Synb0-DISCO. This is required to import all the scripts in it and the training data. 
+
 To generate a b0 given a single T1:
 ```bash
 python Synb0-DISCO/src/gen_synb0_single.py <t1_file> <synb0_root> <output_folder>
+```
+
+To generate a b0 given a bids directory:
+```bash
+python Synb0-DISCO/src/gen_synb0_bids.py <bids_dir> <synb0_root> <output_folder>
 ```
