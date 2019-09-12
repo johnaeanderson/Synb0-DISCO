@@ -45,6 +45,8 @@ Congrats! You are now ready to generate synthetic b0s.
 
 ## Usage
 
+*Note, prior to running this command, make sure your T1 images are oriented correctly (fslreorient2std) and de-biased N4BiasFieldCorrection
+
 In the following commands, <synb0_root> should always point to the folder where you pulled the repo, Synb0-DISCO. This is required to import all the scripts in it and the training data. 
 
 To generate a b0 given a single T1:
