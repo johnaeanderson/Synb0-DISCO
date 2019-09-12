@@ -32,6 +32,8 @@ module load FSL/6.0.1 matlab/R2017b
 
 Create a python (3.5.5) environment with the dependencies from Synb0-DISCO/src/requirements.txt.
 
+*note, install python environments from here: https://github.com/pyenv/pyenv, then install the software for virtual environments from here https://github.com/pyenv/pyenv-virtualenv
+
 Note: Always activate your python environment after loading the modules from the previous step. This is because loading those modules sometimes override the python environments.
 ```bash
 pyenv virtualenv 3.5.5 synb0
