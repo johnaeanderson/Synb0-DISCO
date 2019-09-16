@@ -54,6 +54,10 @@ To generate a b0 given a single T1:
 python Synb0-DISCO/src/gen_synb0_single.py <t1_file> <synb0_root> <output_folder>
 #note your T1 image cannot have an extension (e.g., if it ends in .nii.gz the script will not run)
 ```
+first install pybids
+```bash
+pip install pybids
+```
 
 To generate a b0 given a bids directory:
 ```bash
